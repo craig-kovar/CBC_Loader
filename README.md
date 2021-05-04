@@ -1,7 +1,7 @@
 # CBC_Loader
 Simple Command Line tool to load and test Couchbase
 
-##Usage
+## Usage
 CBC_Loader
 Version: 1.0.0
 
@@ -28,11 +28,11 @@ Mode = perf
 	-a = Use Async Couchbase API
 	-P = print output
   
-  ##Mode _fakeit_
+  ## Mode _fakeit_
   This mode is designed to read a directory output from the [fakeit](https://github.com/bentonam/fakeit.git) utility and load the data into Couchbase
   
-  ##Mode _load_
+  ## Mode _load_
   This method is designed to read the first 10,000 documents or until a DocumentNotFound exception is encountered.  It will then continously add new documents using the values from the first 10,000 documents.
   
-  ##Mode _perf_
+  ## Mode _perf_
   This mode is designed to perform Couchbase Get operations from a starting id to a maximum id.  This does support using both the synchronous and aysnchronous APIs
