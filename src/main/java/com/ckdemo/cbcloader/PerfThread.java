@@ -23,6 +23,9 @@ public class PerfThread extends Thread {
     private long successfulCnt = 0L;
     private long errorCnt = 0L;
     private long microsecondElapsed = 0L;
+    private long ops200ms = 0L;
+    private long ops500ms = 0L;
+    private long ops1s = 0L;
     private long minMicro = 1000000;
     private long maxMicro = 0;
 
@@ -65,6 +68,18 @@ public class PerfThread extends Thread {
         return this.maxMicro;
     }
 
+    public long getOps200ms() {
+        return this.ops200ms;
+    }
+
+    public long getOps500ms() {
+        return this.ops500ms;
+    }
+
+    public long getOps1s() {
+        return this.ops1s;
+    }
+
     @Override
     public void run() {
         System.out.println(String.format("Starting thread %s at %s with batch = %s; min = %s; max = %s",
@@ -90,6 +105,14 @@ public class PerfThread extends Thread {
 
                     if (duration > maxMicro) {
                         maxMicro = duration;
+                    }
+
+                    if (duration >= 200000 && duration < 500000) {
+                        ops200ms++;
+                    } else if (duration >= 500000 && duration < 1000000) {
+                        ops500ms++;
+                    } else if (duration >= 1000000) {
+                        ops1s++;
                     }
 
                     minId++;

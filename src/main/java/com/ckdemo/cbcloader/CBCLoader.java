@@ -209,16 +209,19 @@ public class CBCLoader {
     private static void printStats(PerfThread[] threads) {
         System.out.println("");
         System.out.println(String.format("Using Couchbase Reactive SDK = %s",reactive));
-        System.out.println(String.format("|%20s|%25s|%25s|%25s|%25s|%25s|%25s|",
+        System.out.println(String.format("|%20s|%25s|%25s|%25s|%25s|%25s|%25s|%20s|%20s|%20s|",
                 "Thread Name",
                 "Total Successful Gets",
                 "Total Error Gets",
                 "Total Elapsed Time (us)",
                 "Average Elapsed Time (us)",
                 "Min Elapsed Time (us)",
-                "Max Elapsed Time (us)"));
+                "Max Elapsed Time (us)",
+                "Ops 200-500ms",
+                "Ops 500ms-1s",
+                "Ops 1s+"));
 
-        System.out.println("-".repeat(178));
+        System.out.println("-".repeat(241));
 
 
         for (int i=0; i< threads.length; i++) {
@@ -230,17 +233,24 @@ public class CBCLoader {
                 avg = 0;
             }
 
-            System.out.println(String.format("|%20s|%25d|%25d|%25d|%25d|%25d|%25d|",
+            System.out.println(String.format("|%20s|%25d|%25d|%25d|%25d|%25d|%25d|%20d|%20d|%20d|",
                     threads[i].getLocalName(),
                     threads[i].getSuccessfulCnt(),
                     threads[i].getErrorCnt(),
                     threads[i].getMicrosecondElapsed(),
                     avg,
                     threads[i].getMinMicro(),
-                    threads[i].getMaxMicro()));
+                    threads[i].getMaxMicro(),
+                    threads[i].getOps200ms(),
+                    threads[i].getOps500ms(),
+                    threads[i].getOps1s()));
+
+            if (i%5 == 0 && i>0) {
+                System.out.println("-".repeat(241));
+            }
         }
 
-        System.out.println("-".repeat(178));
+        System.out.println("-".repeat(241));
         System.out.println("");
     }
 
