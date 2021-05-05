@@ -5,6 +5,7 @@ import com.couchbase.client.core.env.IoConfig;
 import com.couchbase.client.core.env.SecurityConfig;
 import com.couchbase.client.core.error.CouchbaseException;
 import com.couchbase.client.core.error.DocumentNotFoundException;
+import com.couchbase.client.core.error.RequestCanceledException;
 import com.couchbase.client.java.*;
 import com.couchbase.client.java.env.ClusterEnvironment;
 import com.couchbase.client.java.json.JsonObject;
@@ -90,9 +91,13 @@ public class CBUtil {
     public static List<GetResult> asyncGets(List<String> docsToFetch){
         List<GetResult> successfulResults = Collections.synchronizedList(new ArrayList<>());
 
-        Flux.fromIterable(docsToFetch).flatMap(key -> reactiveCollection.get(key).onErrorResume(e -> {
-            return Mono.empty();
-        })).doOnNext(successfulResults::add).last().block();
+        try {
+            Flux.fromIterable(docsToFetch).flatMap(key -> reactiveCollection.get(key).onErrorResume(e -> {
+                return Mono.empty();
+            })).doOnNext(successfulResults::add).blockLast();
+        } catch (RequestCanceledException re) {
+
+        }
 
         return successfulResults;
     }

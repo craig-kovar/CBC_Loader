@@ -17,8 +17,8 @@ public class PerfThread extends Thread {
     private int minId = 1;
     private int maxId = 1;
     private int batch = 1;
-    private boolean async = false;
-    private boolean print = false;
+    private boolean async;
+    private boolean print;
 
     private long successfulCnt = 0L;
     private long errorCnt = 0L;
@@ -89,8 +89,8 @@ public class PerfThread extends Thread {
 
                 if (!async) {
                     Instant startInstant = Instant.now();
-                    GetResult result = CBUtil.getDoc(String.format(String.format(idPattern, minId)));
-                    Long duration = ChronoUnit.MICROS.between(startInstant, Instant.now());
+                    GetResult result = CBUtil.getDoc(String.format(idPattern, minId));
+                    long duration = ChronoUnit.MICROS.between(startInstant, Instant.now());
 
                     if (print) {
                         System.out.println(result.contentAsObject());
@@ -107,7 +107,7 @@ public class PerfThread extends Thread {
                         maxMicro = duration;
                     }
 
-                    if (duration >= 200000 && duration < 500000) {
+                    if (duration >= 120000 && duration < 500000) {
                         ops200ms++;
                     } else if (duration >= 500000 && duration < 1000000) {
                         ops500ms++;
@@ -119,7 +119,7 @@ public class PerfThread extends Thread {
 
                 } else {
 
-                    List<String> docsToFetch = new ArrayList<String>();
+                    List<String> docsToFetch = new ArrayList<>();
                     long startId = minId;
                     long stop = startId + batch;
 
@@ -132,7 +132,7 @@ public class PerfThread extends Thread {
 
                     Instant startInstant = Instant.now();
                     List<GetResult> results = CBUtil.asyncGets(docsToFetch);
-                    Long duration = ChronoUnit.MICROS.between(startInstant, Instant.now());
+                    long duration = ChronoUnit.MICROS.between(startInstant, Instant.now());
 
                     if (print) {
                         for (GetResult itr : results) {
@@ -150,6 +150,11 @@ public class PerfThread extends Thread {
 
             } catch (CouchbaseException ce) {
                 errorCnt++;
+                if (!async) {
+                    minId++;
+                } else {
+                    minId += batch;
+                }
             }
 
 

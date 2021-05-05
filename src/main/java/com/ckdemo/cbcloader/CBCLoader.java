@@ -6,7 +6,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class CBCLoader {
 
-    private static final String VERSION = "1.0.0";
+    private static final String VERSION = "1.0.3";
 
     private static String directory;
     private static int threads = 2;
@@ -209,19 +209,19 @@ public class CBCLoader {
     private static void printStats(PerfThread[] threads) {
         System.out.println("");
         System.out.println(String.format("Using Couchbase Reactive SDK = %s",reactive));
-        System.out.println(String.format("|%20s|%25s|%25s|%25s|%25s|%25s|%25s|%20s|%20s|%20s|",
+        System.out.println(String.format("|%15s|%15s|%15s|%25s|%25s|%25s|%25s|%10s|%10s|%10s|",
                 "Thread Name",
-                "Total Successful Gets",
-                "Total Error Gets",
+                "Successful Gets",
+                "Error Gets",
                 "Total Elapsed Time (us)",
                 "Average Elapsed Time (us)",
                 "Min Elapsed Time (us)",
                 "Max Elapsed Time (us)",
-                "Ops 200-500ms",
-                "Ops 500ms-1s",
-                "Ops 1s+"));
+                "120-500ms",
+                "500ms-1s",
+                "1s+"));
 
-        System.out.println("-".repeat(241));
+        System.out.println("-".repeat(186));
 
 
         for (int i=0; i< threads.length; i++) {
@@ -233,7 +233,7 @@ public class CBCLoader {
                 avg = 0;
             }
 
-            System.out.println(String.format("|%20s|%25d|%25d|%25d|%25d|%25d|%25d|%20d|%20d|%20d|",
+            System.out.println(String.format("|%15s|%15d|%15d|%25d|%25d|%25d|%25d|%10d|%10d|%10d|",
                     threads[i].getLocalName(),
                     threads[i].getSuccessfulCnt(),
                     threads[i].getErrorCnt(),
@@ -246,11 +246,11 @@ public class CBCLoader {
                     threads[i].getOps1s()));
 
             if (i%5 == 0 && i>0) {
-                System.out.println("-".repeat(241));
+                System.out.println("-".repeat(186));
             }
         }
 
-        System.out.println("-".repeat(241));
+        System.out.println("-".repeat(186));
         System.out.println("");
     }
 
